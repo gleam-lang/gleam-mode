@@ -1,3 +1,5 @@
+;;; gleam-mode.el --- emacs major mode for the Gleam language
+
 (defconst gleam-mode-syntax-table
   (let ((table (make-syntax-table)))
     ;; " is a string delimiter
