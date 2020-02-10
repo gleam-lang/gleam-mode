@@ -1,3 +1,5 @@
+;;; gleam-mode.el --- emacs major mode for the Gleam language
+
 (setq gleam-font-lock-keywords
       (let* (
             ;; define several category of keywords
