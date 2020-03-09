@@ -1,7 +1,9 @@
 # gleam-mode
 
-An emacs major mode for the [gleam](https://github.com/lpil/gleam) programming language.
+An emacs major mode for the [Gleam](https://github.com/gleam-lang/gleam) programming language.
 
-## Current State
+Currently this provides syntax highlighting.
 
-This mode currently only facilitates passable syntax highlighting. I'm not very good at emacs language mode development, so I'd love some assistance!
+## Installation
+
+TODO! Instructions!
