@@ -23,6 +23,9 @@
 ;;;###autoload
 (define-derived-mode gleam-mode c-mode "gleam mode"
   "Major mode for editing gleam"
+  ;; use // for commenting lines
+  (setq-local comment-start "// ")
+  (setq-local comment-end "")
 
   ;; code for syntax highlighting
   (setq font-lock-defaults '((gleam-font-lock-keywords))))
