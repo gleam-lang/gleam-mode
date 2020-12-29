@@ -14,6 +14,8 @@
         `(
           (,x-keywords-regexp . font-lock-keyword-face)
           (,x-booleans-regexp . font-lock-constant-face)
+          ("fn \\([_[:alpha:]]+\\)(" 1 font-lock-function-name-face)
+          ("[[:upper:]][[:alpha:]]*" . font-lock-type-face)
           ;; note: order above matters, because once colored, that part won't change.
           ;; in general, put longer words first
           )))
