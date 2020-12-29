@@ -8,7 +8,7 @@
             (x-booleans '("True" "False"))
 
             ;; generate regex string for each category of keywords
-            (x-keywords-regexp (regexp-opt x-keywords 'words))
+            (x-keywords-regexp (regexp-opt x-keywords 'symbols))
             (x-booleans-regexp (regexp-opt x-booleans 'words)))
 
         `(
