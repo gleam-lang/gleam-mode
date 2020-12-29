@@ -3,7 +3,7 @@
 (setq gleam-font-lock-keywords
       (let* (
             ;; define several category of keywords
-            (x-keywords '("case" "external" "fn" "import" "let" "pub" "type"
+            (x-keywords '("case" "const" "external" "fn" "import" "let" "pub" "type"
                           "assert" "try" "tuple" "opaque"))
             (x-booleans '("True" "False"))
 
