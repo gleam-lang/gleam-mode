@@ -3,8 +3,8 @@
 (setq gleam-font-lock-keywords
       (let* (
             ;; define several category of keywords
-            (x-keywords '("case" "const" "external" "fn" "import" "let" "pub" "type"
-                          "assert" "try" "tuple" "opaque"))
+            (x-keywords '("as" "assert" "case" "const" "external" "fn" "if"
+                          "import" "let" "opaque" "pub" "todo" "try" "type"))
             (x-booleans '("True" "False"))
 
             ;; generate regex string for each category of keywords
