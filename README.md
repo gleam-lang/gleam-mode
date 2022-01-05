@@ -6,8 +6,8 @@ navigation.
 
 ### TODO:
 
-- [ ] Syntax highlighting
-- [ ] Indentation
+- [x] Syntax highlighting
+- [x] Indentation (at least somewhat)
 - [ ] Completion
 - [ ] REPL?
 
