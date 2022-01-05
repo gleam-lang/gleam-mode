@@ -91,6 +91,11 @@ Key bindings:
 \\{gleam-mode-map}"
 
   ;; Configure tree-sitter and friends
+
+  ;;; Compile tree-sitter grammar if we haven't already
+  (unless (file-exists-p (concat gleam-mode--tree-sitter-dir "gleam.so"))
+    (gleam-mode--compile-grammar))
+
   (add-to-list 'tree-sitter-load-path gleam-mode--tree-sitter-dir)
   (tree-sitter-load 'gleam)
   (add-to-list 'tree-sitter-major-mode-language-alist '(gleam-mode . gleam))
@@ -122,6 +127,20 @@ Key bindings:
 (defconst gleam-mode--highlights-query-file
   (concat gleam-mode--queries-dir "highlights.scm")
   "The file containing the highlight queries for tree-sitter-gleam.")
+
+(defun gleam-mode--compile-grammar ()
+  "Compile the tree-sitter-grammar to a shared library for loading."
+  (if (executable-find "cc")
+      (let ((default-directory gleam-mode--tree-sitter-dir))
+        (call-process "cc" nil nil nil
+                        "-shared"
+                        "-fPIC"
+                        "-g"
+                        "-O2"
+                        "-I" "src"
+                        "src/parser.c"
+                        "-o" "gleam.so"))
+    (message "A C compiler is required to build the tree-sitter grammar.")))
 
 (defun gleam-mode--read-highlight-query ()
   "Read the contents of the tree-sitter-gleam highlight query."
