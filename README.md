@@ -4,7 +4,7 @@ An Emacs Major Mode for [Gleam]
 This mode uses [tree-sitter] under-the-hood for syntax highlighting and code
 navigation.
 
-### TODO:
+### TODO
 
 - [x] Syntax highlighting
 - [x] Indentation (at least somewhat)
