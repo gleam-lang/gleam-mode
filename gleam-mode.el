@@ -6,7 +6,7 @@
 ;; URL: https://github.com/gleam-lang/gleam-mode
 ;; Keywords: languages gleam
 ;; Version: 0.1.0
-;; Package-Requires: ((emacs "25.1") (tree-sitter "0.15.0"))
+;; Package-Requires: ((emacs "26.1") (tree-sitter "0.15.0"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -106,6 +106,31 @@ Key bindings:
 
   (setq-local indent-tabs-mode nil)
   (tree-sitter-indent-mode))
+
+
+;;; Public functions
+(defun gleam-format ()
+  "Format the current buffer using the `gleam format' command."
+  (interactive)
+  (if (executable-find "gleam")
+    (save-restriction ; Save the user's narrowing, if any
+      (widen)         ; Expand scope to the whole, unnarrowed buffer
+      (let* ((buf (current-buffer))
+             (min (point-min))
+             (max (point-max))
+             (tmpfile (make-nearby-temp-file "gleam-format")))
+        (unwind-protect
+            (with-temp-buffer
+              (insert-buffer-substring-no-properties buf min max)
+              (write-file tmpfile)
+              (call-process "gleam" nil nil nil "format" (buffer-file-name))
+              (revert-buffer :ignore-autosave :noconfirm)
+              (let ((tmpbuf (current-buffer)))
+                (with-current-buffer buf
+                  (replace-buffer-contents tmpbuf))))
+          (if (file-exists-p tmpfile) (delete-file tmpfile)))
+        (message "Formatted!")))
+    (message "`gleam' executable not found!")))
 
 
 ;;; Private functions
