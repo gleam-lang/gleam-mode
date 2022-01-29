@@ -108,6 +108,12 @@ Key bindings:
   ;;; Configure Emacs settings
   (setq-local indent-tabs-mode nil)
 
+  ;; Comment settings
+  (setq-local comment-start "// ")
+  (setq-local comment-end "")
+  (setq-local comment-start-skip "//+ *")
+  (setq-local comment-use-syntax t)
+
   ;; Imenu settings
   (setq-local imenu-generic-expression gleam-imenu-generic-expression)
   (setq-local imenu-case-fold-search nil))
