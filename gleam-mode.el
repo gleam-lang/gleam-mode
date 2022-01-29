@@ -90,9 +90,9 @@
 Key bindings:
 \\{gleam-mode-map}"
 
-  ;; Configure tree-sitter and friends
+  ;;; Configure tree-sitter and friends
 
-  ;;; Compile tree-sitter grammar if we haven't already
+  ;; Compile tree-sitter grammar if we haven't already
   (unless (file-exists-p (concat gleam-mode--tree-sitter-dir "gleam.so"))
     (gleam-mode--compile-grammar))
 
@@ -103,9 +103,10 @@ Key bindings:
 
   (tree-sitter-mode)
   (tree-sitter-hl-mode)
+  (tree-sitter-indent-mode)
 
-  (setq-local indent-tabs-mode nil)
-  (tree-sitter-indent-mode))
+  ;;; Configure Emacs settings
+  (setq-local indent-tabs-mode nil))
 
 
 ;;; Public functions
