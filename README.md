@@ -11,7 +11,7 @@ This project will eventually be hosted on [MELPA]. However, until that time, the
 best way to install this is first to clone the project:
 
 ```
-$ git clone git@github.com:gleam-lang/gleam-mode
+$ git clone --recurse-submodules git@github.com:gleam-lang/gleam-mode
 ```
 
 Then you'll need to load this from your init script (`~/.emacs` or
