@@ -106,7 +106,11 @@ Key bindings:
   (tree-sitter-indent-mode)
 
   ;;; Configure Emacs settings
-  (setq-local indent-tabs-mode nil))
+  (setq-local indent-tabs-mode nil)
+
+  ;; Imenu settings
+  (setq-local imenu-generic-expression gleam-imenu-generic-expression)
+  (setq-local imenu-case-fold-search nil))
 
 
 ;;; Public functions
@@ -132,6 +136,20 @@ Key bindings:
           (if (file-exists-p tmpfile) (delete-file tmpfile)))
         (message "Formatted!")))
     (message "`gleam' executable not found!")))
+
+(defvar gleam-imenu-generic-expression
+  '(("Private Constants"          "^\\s-*const\\s-+\\([_a-z][_0-9a-z]*\\)\\s-+.*$" 1)
+    ("Public Constants"           "^\\s-*pub\\s-+const\\s-+\\([_a-z][_0-9a-z]*\\)\\s-+.*$" 1)
+    ("Private External Types"     "^\\s-*external\\s-+type\\s-+\\([A-Z][_0-9a-zA-Z]*\\).*$" 1)
+    ("Public External Types"      "^\\s-*pub\\s-+external\\s-+type\\s-+\\([A-Z][_0-9a-zA-Z]*\\).*$" 1)
+    ("Private External Functions" "^\\s-*external\\s-+fn\\s-+\\([_a-z][_0-9a-z]*\\).*$" 1)
+    ("Public External Functions"  "^\\s-*pub\\s-+external\\s-+fn\\s-+\\([_a-z][_0-9a-z]*\\).*$" 1)
+    ("Private Functions"          "^\\s-*fn\\s-+\\([_a-z][_0-9a-z]*\\).*$" 1)
+    ("Public Functions"           "^\\s-*pub\\s-+fn\\s-+\\([_a-z][_0-9a-z]*\\).*$" 1)
+    ("Private Types"              "^\\s-*type\\s-+\\([A-Z][_0-9a-zA-Z]*\\).*$" 1)
+    ("Public Types"               "^\\s-*pub\\s-+type\\s-+\\([A-Z][_0-9a-zA-Z]*\\).*$" 1)
+    ("Public Opaque Types"        "^\\s-*pub\\s-+opaque\\s-+type\\s-+\\([A-Z][_0-9a-zA-Z]*\\).*$" 1))
+  "Imenu patterns for `gleam-mode'.")
 
 
 ;;; Private functions
