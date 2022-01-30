@@ -4,6 +4,8 @@ An Emacs Major Mode for [Gleam]
 This mode uses [tree-sitter] under-the-hood for syntax highlighting and code
 navigation.
 
+https://user-images.githubusercontent.com/2058614/151681785-5d212e1b-191b-4e7d-a868-f6e42d7efe61.mp4
+
 Setup
 -----
 
