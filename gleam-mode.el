@@ -114,6 +114,10 @@ Key bindings:
   (setq-local comment-start-skip "//+ *")
   (setq-local comment-use-syntax t)
 
+  ;; Register compilation error format
+  (add-to-list 'compilation-error-regexp-alist-alist '(gleam "┌─ \\([^ ]+\\.gleam\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'gleam)
+
   ;; Imenu settings
   (setq-local imenu-generic-expression gleam-imenu-generic-expression)
   (setq-local imenu-case-fold-search nil))
