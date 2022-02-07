@@ -113,6 +113,7 @@ Key bindings:
   (setq-local comment-end "")
   (setq-local comment-start-skip "//+ *")
   (setq-local comment-use-syntax t)
+  (setq-local comment-auto-fill-only-comments t)
 
   ;; Register compilation error format
   (add-to-list 'compilation-error-regexp-alist-alist '(gleam "┌─ \\([^ ]+\\.gleam\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
