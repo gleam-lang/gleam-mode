@@ -78,3 +78,13 @@ TODO
 [Gleam]: https://gleam.run
 [tree-sitter]: https://github.com/tree-sitter/tree-sitter
 [MELPA]: https://melpa.org
+
+License
+-------
+
+This program is licensed under The Apache License, Version 2.0 or, at your
+option, under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 3, or (at your option) any later
+version. See [LICENSE-apache](./LICENSE-apache) for the terms of the Apache
+License, Version 2.0 or [LICENSE-gpl](./LICENSE-gpl) for the terms of the GNU
+Public License, Version 3.
