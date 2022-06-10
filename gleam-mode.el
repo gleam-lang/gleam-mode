@@ -205,6 +205,7 @@ Key bindings:
                         "-O2"
                         "-I" "src"
                         "src/parser.c"
+                        "src/scanner.c"
                         "-o" "gleam.so"))
     (message "A C compiler is required to build the tree-sitter grammar.")))
 
