@@ -35,6 +35,10 @@ Replace `~/path/to/gleam-ts-mode` with the path where you cloned gleam-mode.
 
 Replace `~/path/to/gleam-ts-mode` with the path where you cloned gleam-mode.
 
+### Install the Tree-Sitter Grammar
+
+Unless you have the Gleam tree-sitter grammar installed and treesit knows where to find it, you'll want to run `M-x gleam-ts-install-grammar`.  It should only take a moment, but does require that your OS has a C compiler available.
+
 TODO
 ----
 
