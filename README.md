@@ -37,6 +37,17 @@ Replace `~/path/to/gleam-mode` with the path where you cloned gleam-mode.
 
 Replace `~/path/to/gleam-mode` with the path where you cloned gleam-mode.
 
+### doom emacs
+
+```elisp
+(package! gleam-mode
+  :recipe (:host github :repo "gleam-lang/gleam-mode"))
+```
+
+Add this to your `packages.el` typically found in `~/.config/doom`, then run
+`doom sync` on the command line. Either restart Emacs or run `M-x doom/reload` for
+the changes to take effect.
+
 Configuration
 -------------
 
