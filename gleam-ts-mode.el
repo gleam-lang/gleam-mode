@@ -265,7 +265,7 @@
                   (annotation documentation module builtin bracket delimiter)))
     (treesit-major-mode-setup))
    (t
-    (message "Cannot load Gleam tree-sitter-gleam."))))
+    (message "Cannot load tree-sitter-gleam.  Try running `gleam-ts-install-grammar' and report a bug if the issue reoccurs."))))
 
 (provide 'gleam-ts-mode)
 ;;; gleam-ts-mode.el ends here
