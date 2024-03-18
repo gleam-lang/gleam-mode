@@ -44,7 +44,7 @@ TODO
 
 - [x] Syntax highlighting
 - [ ] Indentation
-- [ ] Imenu integration
+- [x] Imenu integration
 - [x] Formatting
 - [ ] Completion?
 - [ ] REPL?
