@@ -246,6 +246,52 @@
     (display-warning 'gleam-ts "`gleam' executable not found!")))
 
 
+;;; Private functions
+(defun gleam-ts--public (node)
+  "Determine whether NODE is public."
+  (treesit-filter-child
+   node
+   (lambda (child) (equal (treesit-node-type child) "visibility_modifier"))))
+
+(defun gleam-ts--private (node)
+  "Determine whether NODE is private."
+  (not (gleam-ts--public node)))
+
+(defun gleam-ts--opaque (node)
+  "Determine whether NODE is opaque."
+  (treesit-filter-child
+   node
+   (lambda (child) (equal (treesit-node-type child) "opacity_modifier"))))
+
+(defun gleam-ts--transparent (node)
+  "Determine whether NODE is /not/ opaque (i.e. transparent)."
+  (not (gleam-ts--opaque node)))
+
+(defun gleam-ts--external-fun (node)
+  "Determine whether function NODE is external."
+  (not (treesit-node-child-by-field-name node "body")))
+
+(defun gleam-ts--internal-fun (node)
+  "Determine whether function NODE is internal to Gleam."
+  (not (gleam-ts--external-fun node)))
+
+(defun gleam-ts--constant-name (node)
+  "Retrieve the name from a constant NODE."
+  (treesit-node-text (treesit-node-child-by-field-name node "name")))
+
+(defun gleam-ts--function-name (node)
+  "Retrieve the name from a function NODE."
+  (treesit-node-text (treesit-node-child-by-field-name node "name")))
+
+(defun gleam-ts--type-name (node)
+  "Retrieve the name from a type NODE."
+  (treesit-node-text
+   (car
+    (treesit-filter-child
+     node
+     (lambda (child) (equal (treesit-node-type child) "type_name"))))))
+
+
 ;;; Major mode definition
 
 (define-derived-mode gleam-ts-mode prog-mode "Gleam"
@@ -263,6 +309,21 @@
                 '((comment string number function-name variable-name constructor type-name)
                   (constant-name keyword operator property)
                   (annotation documentation module builtin bracket delimiter)))
+
+    (setq-local treesit-simple-imenu-settings
+                '(("Public Functions"           "^function$"       (lambda (fun) (and (gleam-ts--public fun) (gleam-ts--internal-fun fun))) gleam-ts--function-name)
+                  ("Public Types"               "^type_definition" (lambda (type) (and (gleam-ts--public type) (gleam-ts--transparent type))) gleam-ts--type-name)
+                  ("Public Type Alias"          "^type_alias"      gleam-ts--public  gleam-ts--type-name)
+                  ("Public Opaque Types"        "^type_definition" (lambda (type) (and (gleam-ts--public type) (gleam-ts--opaque type))) gleam-ts--type-name)
+                  ("Public Constants"           "^constant$"       gleam-ts--public  gleam-ts--constant-name)
+                  ("Public External Functions"  "^function$"       (lambda (fun) (and (gleam-ts--public fun) (gleam-ts--external-fun fun))) gleam-ts--function-name)
+                  ("Public External Types"      "^external_type"   gleam-ts--public  gleam-ts--type-name)
+                  ("Private Functions"          "^function$"       gleam-ts--private gleam-ts--function-name)
+                  ("Private Types"              "^type_definition" gleam-ts--private gleam-ts--type-name)
+                  ("Private Type Alias"         "^type_alias"      gleam-ts--private gleam-ts--type-name)
+                  ("Private Constants"          "^constant$"       gleam-ts--private gleam-ts--constant-name)
+                  ("Private External Functions" "^todo"            (lambda (fun) (and (gleam-ts--private fun) (gleam-ts--external-fun fun))) gleam-ts--function-name)
+                  ("Private External Types"     "^external_type"   gleam-ts--private gleam-ts--type-name)))
     (treesit-major-mode-setup))
    (t
     (message "Cannot load tree-sitter-gleam.  Try running `gleam-ts-install-grammar' and report a bug if the issue reoccurs."))))
