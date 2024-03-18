@@ -326,7 +326,7 @@
                   ("Private External Types"     "^external_type"   gleam-ts--private gleam-ts--type-name)))
 
     (setq-local comment-start "// ")
-    (setq-local comment-start-skip (rx "//" (* (syntax whitespace))))
+    (setq-local comment-start-skip (rx "/" (+ "/") (* (syntax whitespace))))
     (setq-local comment-end "")
     (setq-local comment-end-skip
                 (rx (* (syntax whitespace))
