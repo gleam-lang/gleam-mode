@@ -324,6 +324,14 @@
                   ("Private Constants"          "^constant$"       gleam-ts--private gleam-ts--constant-name)
                   ("Private External Functions" "^todo"            (lambda (fun) (and (gleam-ts--private fun) (gleam-ts--external-fun fun))) gleam-ts--function-name)
                   ("Private External Types"     "^external_type"   gleam-ts--private gleam-ts--type-name)))
+
+    (setq-local comment-start "// ")
+    (setq-local comment-start-skip (rx "//" (* (syntax whitespace))))
+    (setq-local comment-end "")
+    (setq-local comment-end-skip
+                (rx (* (syntax whitespace))
+                    (group (or (syntax comment-end) "\n"))))
+
     (treesit-major-mode-setup))
    (t
     (message "Cannot load tree-sitter-gleam.  Try running `gleam-ts-install-grammar' and report a bug if the issue reoccurs."))))
