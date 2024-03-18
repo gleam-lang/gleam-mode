@@ -66,6 +66,15 @@ Add the following after the lines where you setup gleam-mode:
 
 (here "C-c g f" means `Control`+`C` followed by `g` followed by `f`)
 
+### automatically format on save
+
+Alternatively, add these lines to your configuration to automatically run `gleam-format` on save:
+
+``` elisp
+    (add-hook 'gleam-mode-hook
+              (lambda () (add-hook 'before-save-hook 'gleam-format nil t)))
+```
+
 TODO
 ----
 
