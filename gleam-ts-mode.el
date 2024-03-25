@@ -208,6 +208,24 @@
       "<-"
       ] @font-lock-delimiter-face)))
 
+(defvar gleam-ts--indent-rules
+  (let ((offset 'gleam-ts-indent-offset))
+    `((gleam
+       ((node-is "^source_file$") column-0 0)
+       ((node-is "^import$") column-0 0)
+       ((node-is "^attribute$") column-0 0)
+       ((node-is "^}$") parent-bol 0)
+       ((node-is "^]$") parent-bol 0)
+       ((node-is "^)$") parent-bol 0)
+       ((node-is "^function$") column-0 0)
+       ((parent-is "^arguments$") parent-bol ,offset)
+       ((parent-is "^function$") parent-bol ,offset)
+       ((parent-is "^function_parameters$") parent-bol ,offset)
+       ((parent-is "^case$") parent-bol ,offset)
+       ((node-is "^case_clause$") grand-parent ,offset)
+       ((match nil "^case_clause$" "^value$") parent-bol ,offset)
+       ((parent-is "^list$") parent-bol ,offset)))))
+
 
 ;;; Public functions
 
@@ -309,6 +327,8 @@
                 '((comment string number function-name variable-name constructor type-name)
                   (constant-name keyword operator property)
                   (annotation documentation module builtin bracket delimiter)))
+
+    (setq-local treesit-simple-indent-rules gleam-ts--indent-rules)
 
     (setq-local treesit-simple-imenu-settings
                 '(("Public Functions"           "^function$"       (lambda (fun) (and (gleam-ts--public fun) (gleam-ts--internal-fun fun))) gleam-ts--function-name)
