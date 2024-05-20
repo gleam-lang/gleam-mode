@@ -215,5 +215,8 @@ Key bindings:
     (insert-file-contents gleam-mode--highlights-query-file)
     (buffer-string)))
 
+;;;###autoload
+(add-to-list 'auto-mode-alist '("\\.gleam\\'" . gleam-mode))
+
 (provide 'gleam-mode)
 ;;; gleam-mode.el ends here
