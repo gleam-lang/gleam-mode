@@ -92,7 +92,7 @@
   "`tree-sitter-indent' indentation rules based on AST.")
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.gleam" . gleam-mode))
+(add-to-list 'auto-mode-alist '("\\.gleam\\'" . gleam-mode))
 
 ;;;###autoload
 (define-derived-mode gleam-mode prog-mode "Gleam"
@@ -214,9 +214,6 @@ Key bindings:
   (with-temp-buffer
     (insert-file-contents gleam-mode--highlights-query-file)
     (buffer-string)))
-
-;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.gleam\\'" . gleam-mode))
 
 (provide 'gleam-mode)
 ;;; gleam-mode.el ends here
