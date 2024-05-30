@@ -42,7 +42,7 @@ TODO
 ----
 
 - [x] Syntax highlighting
-- [ ] Indentation
+- [x] Indentation
 - [x] Imenu integration
 - [x] Formatting
 - [ ] Completion?
