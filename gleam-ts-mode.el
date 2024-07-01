@@ -373,6 +373,11 @@
                   ("Private External Functions" "^todo"            (lambda (fun) (and (gleam-ts--private fun) (gleam-ts--external-fun fun))) gleam-ts--function-name)
                   ("Private External Types"     "^external_type"   gleam-ts--private gleam-ts--type-name)))
 
+    (setq-local treesit-defun-type-regexp (rx bol (or "type_definition"
+                                                      "type_alias"
+                                                      "function")
+                                              eol))
+
     (setq-local comment-start "// ")
     (setq-local comment-start-skip (rx "/" (+ "/") (* (syntax whitespace))))
     (setq-local comment-end "")
