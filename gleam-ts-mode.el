@@ -243,7 +243,7 @@
        ((parent-is "^function_parameter_types$") parent-bol ,offset)
        ((parent-is "^arguments$") parent-bol ,offset)
        ((parent-is "^case$") parent-bol ,offset)
-       ((node-is "^case_clause$") grand-parent ,offset)
+       ((node-is "^case_clause$") gleam-ts--grand-parent-bol ,offset)
        ((parent-is "^case_clause$") parent-bol ,offset)
        ((parent-is "^record_pattern_arguments$") parent-bol ,offset)
        ((node-is "^|>$") parent-bol gleam-ts--pipe-indent-offset)
@@ -253,6 +253,13 @@
        ((parent-is "^tuple$") parent-bol ,offset)
        ((parent-is "^list$") parent-bol ,offset)
        ((parent-is "^bit_string$") parent-bol ,offset)))))
+
+(defun gleam-ts--grand-parent-bol (_n parent &rest _)
+  "Returns the beginning of line for the PARENT's parent's parent."
+  (save-excursion
+    (goto-char (treesit-node-start (treesit-node-parent parent)))
+    (back-to-indentation)
+    (point)))
 
 (defun gleam-ts--pipe-indent-offset (node parent &rest _)
   "Returns the indentation offset for the given pipeline NODE and its PARENT.
