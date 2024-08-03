@@ -246,13 +246,40 @@
        ((node-is "^case_clause$") grand-parent ,offset)
        ((parent-is "^case_clause$") parent-bol ,offset)
        ((parent-is "^record_pattern_arguments$") parent-bol ,offset)
-       ((node-is "^|>$") parent-bol 0)
+       ((node-is "^|>$") parent-bol gleam-ts--pipe-indent-offset)
        ((parent-is "^binary_expression$") parent-bol ,offset)
        ((parent-is "^todo$") parent-bol ,offset)
        ((parent-is "^panic$") parent-bol ,offset)
        ((parent-is "^tuple$") parent-bol ,offset)
        ((parent-is "^list$") parent-bol ,offset)
        ((parent-is "^bit_string$") parent-bol ,offset)))))
+
+(defun gleam-ts--pipe-indent-offset (node parent &rest _)
+  "Returns the indentation offset for the given pipeline NODE and its PARENT.
+  
+If the pipeline's initial expression is in a multi-element list or a
+multi-argument function call, the indentation increases by one level;
+otherwise, it aligns with the initial expression."
+  (let ((top-level
+         (treesit-node-parent
+          (treesit-parent-while
+           parent
+           (lambda (node) (equal (treesit-node-type node) "binary_expression"))))))
+    (cond
+     ;; Indent if pipeline is within multiple function arguments.
+     ((and
+       (equal (treesit-node-type top-level) "argument")
+       (> (treesit-node-child-count (treesit-node-parent top-level) "argument") 1))
+      gleam-ts-indent-offset)
+
+     ;; Indent if pipeline is in a list with multiple elements.
+     ((and
+       (equal (treesit-node-type top-level) "list")
+       (> (treesit-node-child-count top-level "binary_expression") 1))
+      gleam-ts-indent-offset)
+
+     ;; Otherwise, align with the initial expression.
+     (t 0))))
 
 
 ;;; Public functions
