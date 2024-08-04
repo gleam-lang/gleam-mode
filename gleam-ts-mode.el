@@ -252,6 +252,8 @@
        ((parent-is "^panic$") parent-bol ,offset)
        ((parent-is "^tuple$") parent-bol ,offset)
        ((parent-is "^list$") parent-bol ,offset)
+       ((parent-is "^let$") parent-bol ,offset)
+       ((parent-is "^let_assert$") parent-bol ,offset)
        ((parent-is "^bit_string$") parent-bol ,offset)))))
 
 (defun gleam-ts--grand-parent-bol (_n parent &rest _)
