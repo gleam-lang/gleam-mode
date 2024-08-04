@@ -257,15 +257,15 @@
        ((parent-is "^bit_string$") parent-bol ,offset)))))
 
 (defun gleam-ts--grand-parent-bol (_n parent &rest _)
-  "Returns the beginning of line for the PARENT's parent's parent."
+  "Return the beginning of line for the PARENT's parent's parent."
   (save-excursion
     (goto-char (treesit-node-start (treesit-node-parent parent)))
     (back-to-indentation)
     (point)))
 
-(defun gleam-ts--pipe-indent-offset (node parent &rest _)
-  "Returns the indentation offset for the given pipeline NODE and its PARENT.
-  
+(defun gleam-ts--pipe-indent-offset (_n parent &rest _)
+  "Return the indentation offset for the given pipeline NODE and its PARENT.
+
 If the pipeline's initial expression is in a multi-element list or a
 multi-argument function call, the indentation increases by one level;
 otherwise, it aligns with the initial expression."
