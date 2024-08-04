@@ -1,6 +1,6 @@
 ;;; gleam-ts-mode.el --- Major mode for Gleam -*- lexical-binding: t -*-
 
-;; Copyright © 2023 Louis Pilfold <louis@lpil.uk>
+;; Copyright © 2024 Louis Pilfold <louis@lpil.uk>
 ;; Authors: Jonathan Arnett <jonathan.arnett@protonmail.com>
 ;;
 ;; URL: https://github.com/gleam-lang/gleam-ts-mode
