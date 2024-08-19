@@ -3,7 +3,7 @@
 ;; Copyright © 2024 Louis Pilfold <louis@lpil.uk>
 ;; Authors: Jonathan Arnett <jonathan.arnett@protonmail.com>
 ;;
-;; URL: https://github.com/gleam-lang/gleam-ts-mode
+;; URL: https://github.com/gleam-lang/gleam-mode
 ;; Keywords: languages gleam
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "29.1"))
