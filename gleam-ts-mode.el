@@ -6,6 +6,7 @@
 ;; URL: https://github.com/gleam-lang/gleam-mode
 ;; Keywords: languages gleam
 ;; Version: 0.1.0
+;; SPDX-License-Identifier: Apache-2.0 OR GPL-3.0-or-later
 ;; Package-Requires: ((emacs "29.1"))
 
 ;; This file is NOT part of GNU Emacs.
