@@ -13,7 +13,7 @@
 
 ;; This program is licensed under The Apache License¹, Version 2.0 or,
 ;; at your option, under the terms of the GNU General Public License²
-;; as published by the Free Software Foundation; either version 3, or
+;; as published by the Free Software Foundation, version 3, or
 ;; (at your option) any later version.
 
 ;; ¹ You may not use this file except in compliance with the License.
