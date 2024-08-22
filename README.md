@@ -8,32 +8,36 @@ https://user-images.githubusercontent.com/2058614/151681785-5d212e1b-191b-4e7d-a
 Setup
 -----
 
-This project will eventually be hosted on [MELPA]. However, until that time, the best way to install this is first to clone the project:
-
+This project is hosted on [MELPA], and this is the recommended way to install the package.  To add MELPA as a package repository, add the following to your Emacs init file:
+```elisp
+(require 'package)
+;; Add MELPA to archives
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+;; Load and activate packages
+(package-initialize)
 ```
-$ git clone git@github.com:gleam-lang/gleam-mode
-```
-
-Then you'll need to load this from your init script (`~/.emacs` or `~/.config/emacs/init.el`).
 
 ### use-package (recommended)
 
+Add the following to your Emacs init file:
 ```elisp
 (use-package gleam-ts-mode
-  :load-path "~/path/to/gleam-mode"
   :mode (rx ".gleam" eos))
 ```
 
-Replace `~/path/to/gleam-mode` with the path where you cloned gleam-mode.
-
 ### vanilla
 
-```elisp
-(add-to-list 'load-path "~/path/to/gleam-mode")
-(load-library "gleam-ts-mode")
+Install with
 ```
+M-x package-install RET gleam-ts-mode RET
+```
+(`M-x` stands for "meta + x" which indicates holding the meta key (usually labeled "Alt") and tapping "x".  Where you see `RET` you should press your "Enter" or "Return" key).
 
-Replace `~/path/to/gleam-mode` with the path where you cloned gleam-mode.
+To load the package, run the following (or place it in your Emacs init file):
+```elisp
+(require "gleam-ts-mode")
+(add-to-list 'auto-mode-alist '("\\.gleam\\'" . gleam-ts-mode))
+```
 
 ### Install the Tree-Sitter Grammar
 
