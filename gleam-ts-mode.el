@@ -93,7 +93,7 @@
      (external_function
       name: (identifier) @font-lock-function-name-face)
      (function_call
-      function: (identifier) @font-lock-function-name-face))
+      function: (identifier) @font-lock-function-call-face))
 
    :feature 'variable-name
    :language 'gleam
