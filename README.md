@@ -20,7 +20,8 @@ Then you'll need to load this from your init script (`~/.emacs` or `~/.config/em
 
 ```elisp
 (use-package gleam-ts-mode
-  :load-path "~/path/to/gleam-mode")
+  :load-path "~/path/to/gleam-mode"
+  :mode (rx ".gleam" eos))
 ```
 
 Replace `~/path/to/gleam-mode` with the path where you cloned gleam-mode.
