@@ -1,6 +1,8 @@
 gleam-ts-mode: An Emacs Major Mode for [Gleam]
 ==============================================
 
+[![MELPA](https://melpa.org/packages/gleam-ts-mode-badge.svg)](https://melpa.org/#/gleam-ts-mode)
+
 This mode uses [tree-sitter] (and Emacs 29's `treesit` package) under-the-hood for syntax highlighting and code navigation.  If you're using an Emacs that's older than 29 (run `M-x version` to find out), or a version compiled without `treesit` (run `M-: (treesit-available-p)` to find out), you probably want [gleam-mode] instead.
 
 https://user-images.githubusercontent.com/2058614/151681785-5d212e1b-191b-4e7d-a868-f6e42d7efe61.mp4
