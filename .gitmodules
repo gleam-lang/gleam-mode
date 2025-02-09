@@ -1,3 +1,0 @@
-[submodule "tree-sitter-gleam"]
-	path = tree-sitter-gleam
-	url = https://github.com/gleam-lang/tree-sitter-gleam.git
