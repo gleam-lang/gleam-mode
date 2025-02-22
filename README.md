@@ -45,6 +45,30 @@ To load the package, run the following (or place it in your Emacs init file):
 
 Unless you have the Gleam tree-sitter grammar installed and treesit knows where to find it, you'll want to run `M-x gleam-ts-install-grammar`.  It should only take a moment, but does require that your OS has a C compiler available.
 
+### For Doom-Emacs Users
+
+add this in your 'packages.el' file:
+```elisp
+(package! gleam-ts-mode
+  :recipe (:host github
+           :repo "gleam-lang/gleam-mode"
+           :branch "main"
+
+           :files ("gleam-ts-*.el")))
+```
+add this to your 'config.el' file:
+```elisp
+(use-package! gleam-ts-mode
+  :mode (rx ".gleam" eos))
+
+(after! treesit
+  (add-to-list 'auto-mode-alist '("\\.gleam$" . gleam-ts-mode)))
+
+(after! gleam-ts-mode
+  (unless (treesit-language-available-p 'gleam)
+    (gleam-ts-install-grammar)))
+```
+
 TODO
 ----
 
