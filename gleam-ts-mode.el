@@ -91,9 +91,13 @@
      (function
       name: (identifier) @font-lock-function-name-face)
      (external_function
-      name: (identifier) @font-lock-function-name-face)
+      name: (identifier) @font-lock-function-name-face))
+
+   :feature 'function-use
+   :language 'gleam
+   '((function_call function: (identifier) @font-lock-function-call-face)
      (function_call
-      function: (identifier) @font-lock-function-name-face))
+      function: (field_access record: (identifier) field: (label) @font-lock-function-call-face)))
 
    :feature 'variable-name
    :language 'gleam
@@ -109,6 +113,14 @@
    '((unqualified_import "type" (type_identifier) @font-lock-type-face)
      (remote_type_identifier) @font-lock-type-face
      (type_identifier) @font-lock-type-face)
+
+   :language 'gleam
+   :feature 'type-use
+   '(((record name: (constructor_name) @font-lock-type-face))
+     ((record_pattern name: (constructor_name) @font-lock-type-face))
+     ((data_constructor name: (constructor_name) @font-lock-type-face))
+     ((remote_constructor_name name: (constructor_name) @font-lock-type-face))
+     ((record_update constructor: (constructor_name) @font-lock-type-face)))
 
    :feature 'constant-name
    :language 'gleam
@@ -145,9 +157,12 @@
 
    :feature 'property
    :language 'gleam
-   '((label) @font-lock-property-name-face
-     (tuple_access
-      index: (integer) @font-lock-property-name-face))
+   '((data_constructor_argument label: (label) @font-lock-property-name-face))
+
+   :feature 'property-use
+   :language 'gleam
+   '((field_access record: (identifier) field: (label) @font-lock-property-use-face)
+     (tuple_access index: (integer) @font-lock-property-use-face))
 
    :feature 'annotation
    :language 'gleam
@@ -167,14 +182,7 @@
    '((module) @gleam-ts-module-face
      (import alias: (identifier) @gleam-ts-module-face)
      (remote_type_identifier
-      module: (identifier) @gleam-ts-module-face)
-     (remote_constructor_name
-      module: (identifier) @gleam-ts-module-face)
-     ;; Unfortunately #is-not? local doesn't work here
-     ;; ((field_access
-     ;;   record: (identifier) @gleam-ts-module-face)
-     ;;  (#is-not? local))
-     )
+      module: (identifier) @gleam-ts-module-face))
 
    :feature 'builtin
    :language 'gleam
@@ -392,7 +400,8 @@ otherwise, it aligns with the initial expression."
     (setq-local treesit-font-lock-feature-list
                 '((comment string number function-name variable-name constructor type-name)
                   (constant-name keyword operator property)
-                  (annotation documentation module builtin bracket delimiter)))
+                  (annotation documentation module builtin bracket delimiter)
+                  (function-use property-use type-use)))
 
     (setq-local treesit-simple-indent-rules gleam-ts--indent-rules)
 
