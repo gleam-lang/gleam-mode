@@ -37,7 +37,7 @@ M-x package-install RET gleam-ts-mode RET
 
 To load the package, run the following (or place it in your Emacs init file):
 ```elisp
-(require "gleam-ts-mode")
+(require 'gleam-ts-mode)
 (add-to-list 'auto-mode-alist '("\\.gleam\\'" . gleam-ts-mode))
 ```
 
