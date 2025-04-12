@@ -147,6 +147,7 @@
       "todo"
       "type"
       "use"
+      "echo"
       ] @font-lock-keyword-face)
 
    :feature 'operator
