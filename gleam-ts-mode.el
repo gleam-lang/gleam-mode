@@ -308,10 +308,13 @@ otherwise, it aligns with the initial expression."
   "Install the Gleam tree-sitter grammar."
   (interactive)
   (if (and (treesit-available-p) (boundp 'treesit-language-source-alist))
-      (let ((treesit-language-source-alist
-             (cons
-              '(gleam . ("https://github.com/gleam-lang/tree-sitter-gleam"))
-              treesit-language-source-alist)))
+      (let* ((options (when (< (treesit-library-abi-version) 15)
+                        '(:revision "v1.0.0")))
+             (language-source (append '("https://github.com/gleam-lang/tree-sitter-gleam") options))
+             (treesit-language-source-alist
+              (cons
+               (cons 'gleam language-source)
+               treesit-language-source-alist)))
         (treesit-install-language-grammar 'gleam))
     (display-warning 'treesit "Emacs' treesit package does not appear to be available")))
 
