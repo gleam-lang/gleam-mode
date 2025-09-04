@@ -70,6 +70,20 @@
   '((t (:inherit font-lock-variable-name-face)))
   "Font used for highlighting Gleam modules.")
 
+(defvar gleam-ts--grammar-revision
+  (if (and (treesit-available-p) (< (treesit-library-abi-version) 15))
+      "v1.0.0"
+    "main")
+  "Treesitter grammar (gleam-lang/tree-sitter-gleam repo) revision.")
+
+(defun gleam-ts--grammar-supports-echo-keyword-p ()
+  "Determines whether grammar library version supports the `echo' keyword."
+  (let ((version-p (string-match-p "^v?[0-9]+\\(\\.[0-9]+\\)*$" gleam-ts--grammar-revision)))
+    (if version-p
+        (let ((version (string-trim-left gleam-ts--grammar-revision "v")))
+          (not (version< version "1.1.0")))
+      t)))
+
 (defvar gleam-ts--font-lock-settings
   (treesit-font-lock-rules
    :feature 'comment
@@ -130,25 +144,29 @@
 
    :feature 'keyword
    :language 'gleam
-   '([
-      (visibility_modifier)
-      (opacity_modifier)
-      "as"
-      "assert"
-      "case"
-      "const"
-      ;; Deprecated
-      "external"
-      "fn"
-      "if"
-      "import"
-      "let"
-      "panic"
-      "todo"
-      "type"
-      "use"
-      "echo"
-      ] @font-lock-keyword-face)
+   (let* ((basic-keywords
+           [
+            (visibility_modifier)
+            (opacity_modifier)
+            "as"
+            "assert"
+            "case"
+            "const"
+            ;; Deprecated
+            "external"
+            "fn"
+            "if"
+            "import"
+            "let"
+            "panic"
+            "todo"
+            "type"
+            "use"
+            ])
+          (keywords (if (gleam-ts--grammar-supports-echo-keyword-p)
+                        (append basic-keywords "echo")
+                      basic-keywords)))
+     (list keywords '@font-lock-keyword-face))
 
    :feature 'operator
    :language 'gleam
@@ -308,9 +326,7 @@ otherwise, it aligns with the initial expression."
   "Install the Gleam tree-sitter grammar."
   (interactive)
   (if (and (treesit-available-p) (boundp 'treesit-language-source-alist))
-      (let* ((options (when (< (treesit-library-abi-version) 15)
-                        '(:revision "v1.0.0")))
-             (language-source (append '("https://github.com/gleam-lang/tree-sitter-gleam") options))
+      (let* ((language-source (list "https://github.com/gleam-lang/tree-sitter-gleam" :revision gleam-ts--grammar-revision))
              (treesit-language-source-alist
               (cons
                (cons 'gleam language-source)
