@@ -386,7 +386,7 @@ otherwise, it aligns with the initial expression."
 
 
 ;;; Major mode definition
-
+;;;###autoload
 (define-derived-mode gleam-ts-mode prog-mode "Gleam"
   "Major mode for editing Gleam.
 
