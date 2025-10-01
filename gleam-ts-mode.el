@@ -164,7 +164,7 @@
             "use"
             ])
           (keywords (if (gleam-ts--grammar-supports-echo-keyword-p)
-                        (append basic-keywords "echo")
+                        (append basic-keywords '("echo"))
                       basic-keywords)))
      (list keywords '@font-lock-keyword-face))
 
