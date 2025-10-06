@@ -83,19 +83,21 @@ A change to this setting only takes effect the next time the
   '((t (:inherit font-lock-variable-name-face)))
   "Font used for highlighting Gleam modules.")
 
-(defvar gleam-ts--grammar-revision
+(defconst gleam-ts--grammar-revision
   (if (and (treesit-available-p) (< (treesit-library-abi-version) 15))
       "v1.0.0"
     "main")
   "Treesitter grammar (gleam-lang/tree-sitter-gleam repo) revision.")
 
-(defun gleam-ts--grammar-supports-echo-keyword-p ()
-  "Determines whether grammar library version supports the `echo' keyword."
+(defconst gleam-ts--grammar-supports-echo-keyword-p
   (let ((version-p (string-match-p "^v?[0-9]+\\(\\.[0-9]+\\)*$" gleam-ts--grammar-revision)))
     (if version-p
         (let ((version (string-trim-left gleam-ts--grammar-revision "v")))
           (not (version< version "1.1.0")))
-      t)))
+      t))
+  "Grammar library version supports the `echo' keyword when t.
+Does not otherwise.
+The grammar library version is held in `gleam-ts--grammar-revision'.")
 
 (defvar gleam-ts--font-lock-settings
   (treesit-font-lock-rules
@@ -176,7 +178,7 @@ A change to this setting only takes effect the next time the
             "type"
             "use"
             ])
-          (keywords (if (gleam-ts--grammar-supports-echo-keyword-p)
+          (keywords (if gleam-ts--grammar-supports-echo-keyword-p
                         (append basic-keywords '("echo"))
                       basic-keywords)))
      (list keywords '@font-lock-keyword-face))
