@@ -234,7 +234,8 @@ The grammar library version is held in `gleam-ts--grammar-revision'.")
       "}"
       "<<"
       ">>"
-      ] @font-lock-bracket-face)
+      ]
+     @font-lock-bracket-face)
 
    :feature 'delimiter
    :language 'gleam
@@ -249,7 +250,8 @@ The grammar library version is held in `gleam-ts--grammar-revision'.")
       ".."
       "-"
       "<-"
-      ] @font-lock-delimiter-face)))
+      ]
+     @font-lock-delimiter-face)))
 
 (defvar gleam-ts--indent-rules
   (let ((offset 'gleam-ts-indent-offset))
@@ -421,6 +423,15 @@ Please update `gleam-ts-gleam-executable' customizable user-option"
      node
      (lambda (child) (equal (treesit-node-type child) "type_name"))))))
 
+(defun gleam-ts--format-on-save-maybe ()
+  "Run gleam format on save if currently requested.
+Check the current value of `gleam-ts-format-on-save' and format only when it
+currently is non-nil. This extra checking allows the user to dynamically turn
+this on and off, regardless of the persistent value of
+`gleam-ts-format-on-save' user-option."
+  (when gleam-ts-format-on-save
+    (gleam-ts-format)))
+
 
 ;;; Major mode definition
 ;;;###autoload
@@ -470,9 +481,10 @@ Please update `gleam-ts-gleam-executable' customizable user-option"
                 (rx (* (syntax whitespace))
                     (group (or (syntax comment-end) "\n"))))
 
-    ;; Activate format on save if requested by customization.
-    (when gleam-ts-format-on-save
-      (add-hook 'before-save-hook #'gleam-ts-format nil 'local))
+    ;; Activate format on save if *currently* requested by customization.
+    ;; Always add the hook; the hooked function checks the current value of
+    ;; `gleam-ts-format-on-save' to decide whether formatting should be done.
+    (add-hook 'before-save-hook #'gleam-ts--format-on-save-maybe nil 'local)
 
     (treesit-major-mode-setup))
    (t
