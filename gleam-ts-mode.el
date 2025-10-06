@@ -61,8 +61,16 @@
 
 (defcustom gleam-ts-gleam-executable "gleam"
   "Name of the gleam cli command with or without absolute path.
-Specify the absolute path to gleam if it  is not in your PATH."
+Specify the absolute path to gleam if it is not in your PATH."
   :type 'file
+  :group 'gleam-ts)
+
+(defcustom gleam-ts-format-on-save nil
+  "Activate execution of gleam format on file save when non-nil.
+A change to this setting only takes effect the next time the
+`gleam-ts-mode' executes."
+  :type 'boolean
+  :safe #'booleanp
   :group 'gleam-ts)
 
 ;;; Tree-sitter font locking
@@ -459,6 +467,10 @@ Please update `gleam-ts-gleam-executable' customizable user-option"
     (setq-local comment-end-skip
                 (rx (* (syntax whitespace))
                     (group (or (syntax comment-end) "\n"))))
+
+    ;; Activate format on save if requested by customization.
+    (when gleam-ts-format-on-save
+      (add-hook 'before-save-hook #'gleam-ts-format nil 'local))
 
     (treesit-major-mode-setup))
    (t
