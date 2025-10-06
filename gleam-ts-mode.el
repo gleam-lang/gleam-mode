@@ -59,6 +59,19 @@
   :safe 'integerp
   :group 'gleam-ts)
 
+(defcustom gleam-ts-gleam-executable "gleam"
+  "Name of the gleam cli command with or without absolute path.
+Specify the absolute path to gleam if it is not in your PATH."
+  :type 'file
+  :group 'gleam-ts)
+
+(defcustom gleam-ts-format-on-save nil
+  "Activate execution of gleam format on file save when non-nil.
+A change to this setting only takes effect the next time the
+`gleam-ts-mode' executes."
+  :type 'boolean
+  :safe #'booleanp
+  :group 'gleam-ts)
 
 ;;; Tree-sitter font locking
 
@@ -337,7 +350,7 @@ otherwise, it aligns with the initial expression."
 (defun gleam-ts-format ()
   "Format the current buffer using the `gleam format' command."
   (interactive)
-  (if (executable-find "gleam")
+  (if (executable-find gleam-ts-gleam-executable)
       (save-restriction ; Save the user's narrowing, if any
         (widen)         ; Expand scope to the whole, unnarrowed buffer
         (let* ((buf (current-buffer))
@@ -348,14 +361,17 @@ otherwise, it aligns with the initial expression."
               (with-temp-buffer
                 (insert-buffer-substring-no-properties buf min max)
                 (write-file tmpfile)
-                (call-process "gleam" nil nil nil "format" (buffer-file-name))
+                (call-process gleam-ts-gleam-executable
+                              nil nil nil "format" (buffer-file-name))
                 (revert-buffer :ignore-autosave :noconfirm)
                 (let ((tmpbuf (current-buffer)))
                   (with-current-buffer buf
                     (replace-buffer-contents tmpbuf))))
             (if (file-exists-p tmpfile) (delete-file tmpfile)))
           (message "Formatted!")))
-    (display-warning 'gleam-ts "`gleam' executable not found!")))
+    (user-error "gleam executable (%s) not found!
+Please update `gleam-ts-gleam-executable' customizable user-option"
+                gleam-ts-gleam-executable)))
 
 
 ;;; Private functions
@@ -451,6 +467,10 @@ otherwise, it aligns with the initial expression."
     (setq-local comment-end-skip
                 (rx (* (syntax whitespace))
                     (group (or (syntax comment-end) "\n"))))
+
+    ;; Activate format on save if requested by customization.
+    (when gleam-ts-format-on-save
+      (add-hook 'before-save-hook #'gleam-ts-format nil 'local))
 
     (treesit-major-mode-setup))
    (t
