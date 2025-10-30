@@ -339,7 +339,7 @@ otherwise, it aligns with the initial expression."
   "Install the Gleam tree-sitter grammar."
   (interactive)
   (if (and (treesit-available-p) (boundp 'treesit-language-source-alist))
-      (let* ((language-source (list "https://github.com/gleam-lang/tree-sitter-gleam" :revision gleam-ts--grammar-revision))
+      (let* ((language-source (list "https://github.com/gleam-lang/tree-sitter-gleam" gleam-ts--grammar-revision))
              (treesit-language-source-alist
               (cons
                (cons 'gleam language-source)
