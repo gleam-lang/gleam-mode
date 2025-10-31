@@ -83,19 +83,21 @@ A change to this setting only takes effect the next time the
   '((t (:inherit font-lock-variable-name-face)))
   "Font used for highlighting Gleam modules.")
 
-(defvar gleam-ts--grammar-revision
+(defconst gleam-ts--grammar-revision
   (if (and (treesit-available-p) (< (treesit-library-abi-version) 15))
       "v1.0.0"
     "main")
   "Treesitter grammar (gleam-lang/tree-sitter-gleam repo) revision.")
 
-(defun gleam-ts--grammar-supports-echo-keyword-p ()
-  "Determines whether grammar library version supports the `echo' keyword."
+(defconst gleam-ts--grammar-supports-echo-keyword-p
   (let ((version-p (string-match-p "^v?[0-9]+\\(\\.[0-9]+\\)*$" gleam-ts--grammar-revision)))
     (if version-p
         (let ((version (string-trim-left gleam-ts--grammar-revision "v")))
           (not (version< version "1.1.0")))
-      t)))
+      t))
+  "Grammar library version supports the `echo' keyword when t.
+Does not otherwise.
+The grammar library version is held in `gleam-ts--grammar-revision'.")
 
 (defvar gleam-ts--font-lock-settings
   (treesit-font-lock-rules
@@ -176,7 +178,7 @@ A change to this setting only takes effect the next time the
             "type"
             "use"
             ])
-          (keywords (if (gleam-ts--grammar-supports-echo-keyword-p)
+          (keywords (if gleam-ts--grammar-supports-echo-keyword-p
                         (append basic-keywords '("echo"))
                       basic-keywords)))
      (list keywords '@font-lock-keyword-face))
@@ -232,7 +234,8 @@ A change to this setting only takes effect the next time the
       "}"
       "<<"
       ">>"
-      ] @font-lock-bracket-face)
+      ]
+     @font-lock-bracket-face)
 
    :feature 'delimiter
    :language 'gleam
@@ -247,7 +250,8 @@ A change to this setting only takes effect the next time the
       ".."
       "-"
       "<-"
-      ] @font-lock-delimiter-face)))
+      ]
+     @font-lock-delimiter-face)))
 
 (defvar gleam-ts--indent-rules
   (let ((offset 'gleam-ts-indent-offset))
@@ -421,6 +425,15 @@ Please update `gleam-ts-gleam-executable' customizable user-option"
      node
      (lambda (child) (equal (treesit-node-type child) "type_name"))))))
 
+(defun gleam-ts--format-on-save-maybe ()
+  "Run gleam format on save if currently requested.
+Check the current value of `gleam-ts-format-on-save' and format only when it
+currently is non-nil. This extra checking allows the user to dynamically turn
+this on and off, regardless of the persistent value of
+`gleam-ts-format-on-save' user-option."
+  (when gleam-ts-format-on-save
+    (gleam-ts-format)))
+
 
 ;;; Major mode definition
 ;;;###autoload
@@ -470,9 +483,10 @@ Please update `gleam-ts-gleam-executable' customizable user-option"
                 (rx (* (syntax whitespace))
                     (group (or (syntax comment-end) "\n"))))
 
-    ;; Activate format on save if requested by customization.
-    (when gleam-ts-format-on-save
-      (add-hook 'before-save-hook #'gleam-ts-format nil 'local))
+    ;; Activate format on save if *currently* requested by customization.
+    ;; Always add the hook; the hooked function checks the current value of
+    ;; `gleam-ts-format-on-save' to decide whether formatting should be done.
+    (add-hook 'before-save-hook #'gleam-ts--format-on-save-maybe nil 'local)
 
     (treesit-major-mode-setup))
    (t
