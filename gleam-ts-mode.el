@@ -335,6 +335,7 @@ otherwise, it aligns with the initial expression."
 
 ;;; Public functions
 
+;;;###autoload
 (defun gleam-ts-install-grammar ()
   "Install the Gleam tree-sitter grammar."
   (interactive)
@@ -347,6 +348,7 @@ otherwise, it aligns with the initial expression."
         (treesit-install-language-grammar 'gleam))
     (display-warning 'treesit "Emacs' treesit package does not appear to be available")))
 
+;;;###autoload
 (defun gleam-ts-format ()
   "Format the current buffer using the `gleam format' command."
   (interactive)
