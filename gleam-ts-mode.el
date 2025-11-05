@@ -177,7 +177,7 @@ A change to this setting only takes effect the next time the
             "use"
             ])
           (keywords (if (gleam-ts--grammar-supports-echo-keyword-p)
-                        (append basic-keywords '("echo"))
+                        (vconcat basic-keywords ["echo"])
                       basic-keywords)))
      (list keywords '@font-lock-keyword-face))
 
