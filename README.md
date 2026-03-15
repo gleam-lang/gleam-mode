@@ -24,6 +24,7 @@ This project is hosted on [MELPA], and this is the recommended way to install th
 Add the following to your Emacs init file:
 ```elisp
 (use-package gleam-ts-mode
+  :ensure t
   :mode (rx ".gleam" eos))
 ```
 
