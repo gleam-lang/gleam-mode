@@ -219,7 +219,7 @@ A change to this setting only takes effect the next time the
    :feature 'builtin
    :language 'gleam
    :override t
-   '((bit_string_segment_option) @font-lock-builtin-face)
+   '((bit_array_segment_option) @font-lock-builtin-face)
 
    :feature 'bracket
    :language 'gleam
@@ -296,7 +296,7 @@ A change to this setting only takes effect the next time the
        ((parent-is "^list$") parent-bol ,offset)
        ((parent-is "^let$") parent-bol ,offset)
        ((parent-is "^let_assert$") parent-bol ,offset)
-       ((parent-is "^bit_string$") parent-bol ,offset)))))
+       ((parent-is "^bit_array$") parent-bol ,offset)))))
 
 (defun gleam-ts--grand-parent-bol (_n parent &rest _)
   "Return the beginning of line for the PARENT's parent's parent."
