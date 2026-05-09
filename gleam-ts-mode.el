@@ -89,6 +89,18 @@ A change to this setting only takes effect the next time the
     "main")
   "Treesitter grammar (gleam-lang/tree-sitter-gleam repo) revision.")
 
+(defvar gleam-ts--bit-array-identifier
+  (if (string-equal gleam-ts--grammar-revision "main")
+      'bit_array_segment_option
+    'bit_string_segment_option)
+  "Symbol for `bit_array' to be compatible with older tree-sitter-gleam.")
+
+(defvar gleam-ts--bit-array-regex
+  (if (string-equal gleam-ts--grammar-revision "main")
+      "^bit_array$"
+    "^bit_string$")
+  "Regexp for `bit-array' to be compatible with older tree-sitter-gleam.")
+
 (defun gleam-ts--grammar-supports-echo-keyword-p ()
   "Determines whether grammar library version supports the `echo' keyword."
   (let ((version-p (string-match-p "^v?[0-9]+\\(\\.[0-9]+\\)*$" gleam-ts--grammar-revision)))
@@ -219,7 +231,8 @@ A change to this setting only takes effect the next time the
    :feature 'builtin
    :language 'gleam
    :override t
-   '((bit_array_segment_option) @font-lock-builtin-face)
+   ;; HACK: This makes both v1.0.0 and mainline tree-sitter-gleam happy.
+   `((,gleam-ts--bit-array-identifier) @font-lock-builtin-face)
 
    :feature 'bracket
    :language 'gleam
@@ -296,7 +309,8 @@ A change to this setting only takes effect the next time the
        ((parent-is "^list$") parent-bol ,offset)
        ((parent-is "^let$") parent-bol ,offset)
        ((parent-is "^let_assert$") parent-bol ,offset)
-       ((parent-is "^bit_array$") parent-bol ,offset)))))
+       ;; HACK: This makes both v1.0.0 and mainline tree-sitter-gleam happy.
+       ((parent-is gleam-ts--bit-array-regex) parent-bol ,offset)))))
 
 (defun gleam-ts--grand-parent-bol (_n parent &rest _)
   "Return the beginning of line for the PARENT's parent's parent."
