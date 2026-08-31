@@ -309,6 +309,9 @@ A change to this setting only takes effect the next time the
        ((parent-is "^list$") parent-bol ,offset)
        ((parent-is "^let$") parent-bol ,offset)
        ((parent-is "^let_assert$") parent-bol ,offset)
+       ((parent-is "^data_constructors$") parent-bol 0)
+       ((parent-is "^data_constructor$") parent-bol ,offset)
+       ((parent-is "^data_constructor_arguments$") parent-bol ,offset)
        ;; HACK: This makes both v1.0.0 and mainline tree-sitter-gleam happy.
        ((parent-is gleam-ts--bit-array-regex) parent-bol ,offset)))))
 
