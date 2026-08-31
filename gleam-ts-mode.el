@@ -469,7 +469,7 @@ Please update `gleam-ts-gleam-executable' customizable user-option"
                   ("Private Types"              "^type_definition" gleam-ts--private gleam-ts--type-name)
                   ("Private Type Alias"         "^type_alias"      gleam-ts--private gleam-ts--type-name)
                   ("Private Constants"          "^constant$"       gleam-ts--private gleam-ts--constant-name)
-                  ("Private External Functions" "^todo"            (lambda (fun) (and (gleam-ts--private fun) (gleam-ts--external-fun fun))) gleam-ts--function-name)
+                  ("Private External Functions" "^function$"       (lambda (fun) (and (gleam-ts--private fun) (gleam-ts--external-fun fun))) gleam-ts--function-name)
                   ("Private External Types"     "^external_type"   gleam-ts--private gleam-ts--type-name)))
 
     (setq-local treesit-defun-type-regexp (rx bol (or "type_definition"
