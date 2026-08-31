@@ -366,28 +366,34 @@ otherwise, it aligns with the initial expression."
 (defun gleam-ts-format ()
   "Format the current buffer using the `gleam format' command."
   (interactive)
-  (if (executable-find gleam-ts-gleam-executable)
-      (save-restriction ; Save the user's narrowing, if any
-        (widen)         ; Expand scope to the whole, unnarrowed buffer
-        (let* ((buf (current-buffer))
-               (min (point-min))
-               (max (point-max))
-               (tmpfile (make-nearby-temp-file "gleam-format")))
-          (unwind-protect
-              (with-temp-buffer
-                (insert-buffer-substring-no-properties buf min max)
-                (write-file tmpfile)
-                (call-process gleam-ts-gleam-executable
-                              nil nil nil "format" (buffer-file-name))
-                (revert-buffer :ignore-autosave :noconfirm)
-                (let ((tmpbuf (current-buffer)))
-                  (with-current-buffer buf
-                    (replace-buffer-contents tmpbuf))))
-            (if (file-exists-p tmpfile) (delete-file tmpfile)))
-          (message "Formatted!")))
-    (user-error "gleam executable (%s) not found!
-Please update `gleam-ts-gleam-executable' customizable user-option"
-                gleam-ts-gleam-executable)))
+  (unless (executable-find gleam-ts-gleam-executable)
+    (user-error "gleam executable (%s) not found! Please update `gleam-ts-gleam-executable'"
+                gleam-ts-gleam-executable))
+  (save-restriction
+    (widen)
+    (let ((buf (current-buffer))
+          (tmpfile (make-nearby-temp-file "gleam-format"))
+          (err-buf (get-buffer-create "*Gleam Format Errors*")))
+      (unwind-protect
+          (progn
+            (write-region (point-min) (point-max) tmpfile nil 'silent)
+            (with-current-buffer err-buf (erase-buffer))
+            (if (zerop (call-process gleam-ts-gleam-executable nil err-buf nil "format" tmpfile))
+                (progn
+                  (with-temp-buffer
+                    (insert-file-contents tmpfile)
+                    (let ((tmpbuf (current-buffer)))
+                      (with-current-buffer buf
+                        (replace-region-contents
+			 (point-min) (point-max)
+                         (lambda () tmpbuf)))))
+                  (when-let* ((win (get-buffer-window err-buf)))
+                    (quit-window t win))
+                  (message "Formatted!"))
+              (display-buffer err-buf)
+              (message "Gleam format failed! See %s" (buffer-name err-buf))))
+        (when (file-exists-p tmpfile)
+          (delete-file tmpfile))))))
 
 
 ;;; Private functions
