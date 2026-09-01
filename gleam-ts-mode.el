@@ -373,25 +373,29 @@ otherwise, it aligns with the initial expression."
     (widen)
     (let ((buf (current-buffer))
           (tmpfile (make-nearby-temp-file "gleam-format"))
-          (err-buf (get-buffer-create "*Gleam Format Errors*")))
+          (err-buf-name "*Gleam Format Errors*"))
       (unwind-protect
           (progn
             (write-region (point-min) (point-max) tmpfile nil 'silent)
-            (with-current-buffer err-buf (erase-buffer))
-            (if (zerop (call-process gleam-ts-gleam-executable nil err-buf nil "format" tmpfile))
-                (progn
-                  (with-temp-buffer
-                    (insert-file-contents tmpfile)
-                    (let ((tmpbuf (current-buffer)))
-                      (with-current-buffer buf
-                        (replace-region-contents
-			 (point-min) (point-max)
-                         (lambda () tmpbuf)))))
-                  (when-let* ((win (get-buffer-window err-buf)))
-                    (quit-window t win))
-                  (message "Formatted!"))
-              (display-buffer err-buf)
-              (message "Gleam format failed! See %s" (buffer-name err-buf))))
+            (pcase-let ((`(,status . ,err-msg)
+                         (with-temp-buffer
+                           (cons (call-process gleam-ts-gleam-executable nil t nil "format" tmpfile)
+                                 (buffer-string)))))
+              (if (zerop status)
+                  (progn
+                    (with-temp-buffer
+                      (insert-file-contents tmpfile)
+                      (let ((tmpbuf (current-buffer)))
+                        (with-current-buffer buf
+                          (replace-region-contents
+                           (point-min) (point-max)
+                           (lambda () tmpbuf)))))
+                    (when-let* ((win (get-buffer-window err-buf-name)))
+                      (quit-window t win))
+                    (message "Formatted!"))
+                (with-output-to-temp-buffer err-buf-name
+		  (princ err-msg))
+                (message "Gleam format failed! Press 'q' in %s to dismiss." err-buf-name))))
         (when (file-exists-p tmpfile)
           (delete-file tmpfile))))))
 
