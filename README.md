@@ -25,7 +25,7 @@ Add the following to your Emacs init file:
 ```elisp
 (use-package gleam-ts-mode
   :ensure t
-  :mode (rx ".gleam" eos))
+  :mode "\\.gleam\\")
 ```
 
 ### vanilla

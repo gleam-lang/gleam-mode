@@ -1,7 +1,7 @@
 ;;; gleam-ts-mode.el --- Major mode for Gleam -*- lexical-binding: t -*-
 
 ;; Copyright © 2024 Louis Pilfold <louis@lpil.uk>
-;; Authors: Jonathan Arnett <jonathan.arnett@protonmail.com>
+;; Author: Jonathan Arnett <jonathan.arnett@protonmail.com>
 ;;
 ;; URL: https://github.com/gleam-lang/gleam-mode
 ;; Keywords: languages gleam
@@ -366,28 +366,38 @@ otherwise, it aligns with the initial expression."
 (defun gleam-ts-format ()
   "Format the current buffer using the `gleam format' command."
   (interactive)
-  (if (executable-find gleam-ts-gleam-executable)
-      (save-restriction ; Save the user's narrowing, if any
-        (widen)         ; Expand scope to the whole, unnarrowed buffer
-        (let* ((buf (current-buffer))
-               (min (point-min))
-               (max (point-max))
-               (tmpfile (make-nearby-temp-file "gleam-format")))
-          (unwind-protect
-              (with-temp-buffer
-                (insert-buffer-substring-no-properties buf min max)
-                (write-file tmpfile)
-                (call-process gleam-ts-gleam-executable
-                              nil nil nil "format" (buffer-file-name))
-                (revert-buffer :ignore-autosave :noconfirm)
-                (let ((tmpbuf (current-buffer)))
-                  (with-current-buffer buf
-                    (replace-buffer-contents tmpbuf))))
-            (if (file-exists-p tmpfile) (delete-file tmpfile)))
-          (message "Formatted!")))
-    (user-error "gleam executable (%s) not found!
-Please update `gleam-ts-gleam-executable' customizable user-option"
-                gleam-ts-gleam-executable)))
+  (unless (executable-find gleam-ts-gleam-executable)
+    (user-error "gleam executable (%s) not found! Please update `gleam-ts-gleam-executable'"
+                gleam-ts-gleam-executable))
+  (save-restriction
+    (widen)
+    (let ((buf (current-buffer))
+          (tmpfile (make-nearby-temp-file "gleam-format"))
+          (err-buf-name "*Gleam Format Errors*"))
+      (unwind-protect
+          (progn
+            (write-region (point-min) (point-max) tmpfile nil 'silent)
+            (pcase-let ((`(,status . ,err-msg)
+                         (with-temp-buffer
+                           (cons (call-process gleam-ts-gleam-executable nil t nil "format" tmpfile)
+                                 (buffer-string)))))
+              (if (zerop status)
+                  (progn
+                    (with-temp-buffer
+                      (insert-file-contents tmpfile)
+                      (let ((tmpbuf (current-buffer)))
+                        (with-current-buffer buf
+                          (replace-region-contents
+                           (point-min) (point-max)
+                           (lambda () tmpbuf)))))
+                    (when-let* ((win (get-buffer-window err-buf-name)))
+                      (quit-window t win))
+                    (message "Formatted!"))
+                (with-output-to-temp-buffer err-buf-name
+		  (princ err-msg))
+                (message "Gleam format failed! Press 'q' in %s to dismiss." err-buf-name))))
+        (when (file-exists-p tmpfile)
+          (delete-file tmpfile))))))
 
 
 ;;; Private functions
@@ -469,7 +479,7 @@ Please update `gleam-ts-gleam-executable' customizable user-option"
                   ("Private Types"              "^type_definition" gleam-ts--private gleam-ts--type-name)
                   ("Private Type Alias"         "^type_alias"      gleam-ts--private gleam-ts--type-name)
                   ("Private Constants"          "^constant$"       gleam-ts--private gleam-ts--constant-name)
-                  ("Private External Functions" "^todo"            (lambda (fun) (and (gleam-ts--private fun) (gleam-ts--external-fun fun))) gleam-ts--function-name)
+                  ("Private External Functions" "^function$"       (lambda (fun) (and (gleam-ts--private fun) (gleam-ts--external-fun fun))) gleam-ts--function-name)
                   ("Private External Types"     "^external_type"   gleam-ts--private gleam-ts--type-name)))
 
     (setq-local treesit-defun-type-regexp (rx bol (or "type_definition"
