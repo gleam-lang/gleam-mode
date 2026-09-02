@@ -495,5 +495,12 @@ Please update `gleam-ts-gleam-executable' customizable user-option"
    (t
     (message "Cannot load tree-sitter-gleam.  Try running `gleam-ts-install-grammar' and report a bug if the issue reoccurs."))))
 
+
+(defvar eglot-server-programs)
+;;;###autoload
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(gleam-ts-mode . ("gleam" "lsp"))))
+
 (provide 'gleam-ts-mode)
 ;;; gleam-ts-mode.el ends here
