@@ -459,8 +459,8 @@ otherwise, it aligns with the initial expression."
 \\<gleam-ts-mode-map>"
   :group 'gleam-ts
 
-  (cond
-   ((treesit-ready-p 'gleam)
+  (when (and (treesit-ensure-installed 'gleam)
+	     (treesit-ready-p 'gleam))
     (treesit-parser-create 'gleam)
 
     (setq-local treesit-font-lock-settings gleam-ts--font-lock-settings)
@@ -503,9 +503,7 @@ otherwise, it aligns with the initial expression."
     (when gleam-ts-format-on-save
       (add-hook 'before-save-hook #'gleam-ts-format nil 'local))
 
-    (treesit-major-mode-setup))
-   (t
-    (message "Cannot load tree-sitter-gleam.  Try running `gleam-ts-install-grammar' and report a bug if the issue reoccurs."))))
+    (treesit-major-mode-setup)))
 
 
 (defvar eglot-server-programs)
