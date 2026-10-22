@@ -84,10 +84,17 @@ A change to this setting only takes effect the next time the
   "Font used for highlighting Gleam modules.")
 
 (defvar gleam-ts--grammar-revision
-  (if (and (treesit-available-p) (< (treesit-library-abi-version) 15))
+  (if (and (treesit-available-p)
+	   (< (treesit-library-abi-version) 15))
       "v1.0.0"
     "main")
   "Treesitter grammar (gleam-lang/tree-sitter-gleam repo) revision.")
+
+(add-to-list
+ 'treesit-language-source-alist
+ `(gleam "https://github.com/gleam-lang/tree-sitter-gleam"
+	 :revision ,gleam-ts--grammar-revision)
+ t)
 
 (defvar gleam-ts--bit-array-identifier
   (if (string-equal gleam-ts--grammar-revision "main")
@@ -357,12 +364,7 @@ otherwise, it aligns with the initial expression."
   "Install the Gleam tree-sitter grammar."
   (interactive)
   (if (and (treesit-available-p) (boundp 'treesit-language-source-alist))
-      (let* ((language-source (list "https://github.com/gleam-lang/tree-sitter-gleam" gleam-ts--grammar-revision))
-             (treesit-language-source-alist
-              (cons
-               (cons 'gleam language-source)
-               treesit-language-source-alist)))
-        (treesit-install-language-grammar 'gleam))
+      (treesit-install-language-grammar 'gleam)
     (display-warning 'treesit "Emacs' treesit package does not appear to be available")))
 
 ;;;###autoload
