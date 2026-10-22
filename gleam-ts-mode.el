@@ -451,6 +451,36 @@ otherwise, it aligns with the initial expression."
      (lambda (child) (equal (treesit-node-type child) "type_name"))))))
 
 
+;;; Compilation
+(defconst gleam-ts--compilation-error-regexp
+  (eval-when-compile
+    (rx bol
+	(or "error"
+	    (group-n 1 "warning"))
+	(* (not "\n")) "\n"
+	(+ " ") "┌─ "
+	;; hyperlink
+	(group-n 2
+	  ;; file name
+	  (group-n 3 (* (not (in ":\n"))))
+	  ;; line number
+	  ":" (group-n 4 (+ (in "0-9")))
+	  ;; column number
+	  ":" (group-n 5 (+ (in "0-9"))))))
+  "Regexp matching Gleam compiler warnings and errors.")
+
+(defun gleam-ts--setup-compilation ()
+  "Register Gleam compilation error regexp with compile.el."
+  (require 'compile)
+  (setq compilation-error-regexp-alist-alist
+	(assq-delete-all 'gleam compilation-error-regexp-alist-alist))
+  (push `(gleam
+	  ,gleam-ts--compilation-error-regexp
+	  3 4 5 (1 . nil) 2)
+	compilation-error-regexp-alist-alist)
+  (add-to-list 'compilation-error-regexp-alist 'gleam t))
+
+
 ;;; Major mode definition
 ;;;###autoload
 (define-derived-mode gleam-ts-mode prog-mode "Gleam"
@@ -513,6 +543,9 @@ otherwise, it aligns with the initial expression."
   (if (treesit-available-p)
       (add-to-list 'auto-mode-alist
 		   '("\\.gleam\\'" . gleam-ts-mode))))
+
+;;;###autoload
+(gleam-ts--setup-compilation)
 
 ;;;###autoload
 (with-eval-after-load 'eglot
