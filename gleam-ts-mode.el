@@ -507,6 +507,13 @@ otherwise, it aligns with the initial expression."
 
 
 (defvar eglot-server-programs)
+
+;;;###autoload
+(with-eval-after-load 'treesit
+  (if (treesit-available-p)
+      (add-to-list 'auto-mode-alist
+		   '("\\.gleam\\'" . gleam-ts-mode))))
+
 ;;;###autoload
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs

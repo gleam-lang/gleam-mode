@@ -24,8 +24,7 @@ This project is hosted on [MELPA], and this is the recommended way to install th
 Add the following to your Emacs init file:
 ```elisp
 (use-package gleam-ts-mode
-  :ensure t
-  :mode "\\.gleam\\")
+  :ensure t)
 ```
 
 ### vanilla
@@ -39,7 +38,6 @@ M-x package-install RET gleam-ts-mode RET
 To load the package, run the following (or place it in your Emacs init file):
 ```elisp
 (require 'gleam-ts-mode)
-(add-to-list 'auto-mode-alist '("\\.gleam\\'" . gleam-ts-mode))
 ```
 
 ### Install the Tree-Sitter Grammar
@@ -59,11 +57,7 @@ add this in your 'packages.el' file:
 ```
 add this to your 'config.el' file:
 ```elisp
-(use-package! gleam-ts-mode
-  :mode (rx ".gleam" eos))
-
-(after! treesit
-  (add-to-list 'auto-mode-alist '("\\.gleam$" . gleam-ts-mode)))
+(use-package! gleam-ts-mode)
 
 (after! gleam-ts-mode
   (unless (treesit-language-available-p 'gleam)
