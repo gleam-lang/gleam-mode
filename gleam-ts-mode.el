@@ -93,7 +93,7 @@ A change to this setting only takes effect the next time the
 (add-to-list
  'treesit-language-source-alist
  `(gleam "https://github.com/gleam-lang/tree-sitter-gleam"
-	 :revision ,gleam-ts--grammar-revision)
+	 ,gleam-ts--grammar-revision)
  t)
 
 (defvar gleam-ts--bit-array-identifier
@@ -480,6 +480,17 @@ otherwise, it aligns with the initial expression."
 	compilation-error-regexp-alist-alist)
   (add-to-list 'compilation-error-regexp-alist 'gleam t))
 
+(defun gleam-ts--ensure-installed ()
+  "Make sure the Gleam grammar is installed. On Emacs 31, we can use
+`treesit-ensure-installed', which installs the grammar if it isn't
+available, according to the value of `treesit-auto-install-grammar'. On
+earlier versions, always prompt if the grammar isn't available."
+  (if (fboundp 'treesit-ensure-installed)
+      (treesit-ensure-installed 'gleam)
+    (if (not (treesit-language-available-p 'gleam))
+	(when (y-or-n-p "The Gleam tree-sitter grammar is not installed.  Install it now?")
+	  (gleam-ts-install-grammar)))))
+
 
 ;;; Major mode definition
 ;;;###autoload
@@ -489,7 +500,7 @@ otherwise, it aligns with the initial expression."
 \\<gleam-ts-mode-map>"
   :group 'gleam-ts
 
-  (when (and (treesit-ensure-installed 'gleam)
+  (when (and (gleam-ts--ensure-installed)
 	     (treesit-ready-p 'gleam))
     (treesit-parser-create 'gleam)
 
