@@ -489,7 +489,8 @@ earlier versions, always prompt if the grammar isn't available."
       (treesit-ensure-installed 'gleam)
     (if (not (treesit-language-available-p 'gleam))
 	(when (y-or-n-p "The Gleam tree-sitter grammar is not installed.  Install it now?")
-	  (gleam-ts-install-grammar)))))
+	  (gleam-ts-install-grammar))
+      t)))
 
 
 ;;; Major mode definition
