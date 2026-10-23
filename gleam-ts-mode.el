@@ -544,6 +544,8 @@ earlier versions, always prompt if the grammar isn't available."
     (when gleam-ts-format-on-save
       (add-hook 'before-save-hook #'gleam-ts-format nil 'local))
 
+    (setq-local compile-command "gleam ")
+
     (treesit-major-mode-setup)))
 
 
