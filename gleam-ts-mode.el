@@ -544,7 +544,6 @@ otherwise, it aligns with the initial expression."
       (add-to-list 'auto-mode-alist
 		   '("\\.gleam\\'" . gleam-ts-mode))))
 
-;;;###autoload
 (gleam-ts--setup-compilation)
 
 ;;;###autoload
